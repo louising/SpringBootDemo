@@ -1,0 +1,17 @@
+Dev environment settings
+    JDK8 + Eclipse 4.6 + Oracle11g/MySQL 5.7.17 + Maven 3.2.3
+
+    1. Window/Preferences/Maven/
+        User Settings
+            D:\dev\maven_repositories\maven_settings.xml
+        Installations
+            D:\ProgrammeFiles\apache-maven-3.2.3 
+
+    2. Window/Preferences/General/
+        Workspace/Text fileencoding: UTF-8
+        Editors/Text Editors:/Insert spaces for tabs: checked    
+    
+    3. Window/Preferences/Java/Code Style/Formatter
+        Import HW-formatter.xml
+        Window/Preferences/Java/Code Style/Code Templates
+        Import HW-codeTemplates.xml

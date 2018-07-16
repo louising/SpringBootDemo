@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zero.demo.dao.DummyDao">
+    <sql id="findDummySQL">
+        select 
+            USER_ID   userId, 
+            USER_NAME userName
+        from T_USER
+        where USER_ID <![CDATA[>=]]> #{0}
+    </sql>
+    
+    <select id="findDummyList" resultType="com.zero.demo.vo.DummyVO">
+        <include refid="findDummySQL"/>
+    </select>
+
+    <!-- Add Scheme -->
+    <insert id="addDummy" parameterType="com.zero.demo.vo.DummyVO" useGeneratedKeys="true" keyProperty="userId" keyColumn="user_id" >
+        insert into T_USER(
+            user_name, 
+            login_name,
+             
+            create_time
+        )
+        values (
+            #{userName,  jdbcType=VARCHAR}, 
+            #{loginName, jdbcType=VARCHAR},
+                
+            CURRENT_TIMESTAMP()
+        )
+    </insert>
+
+    <!-- Paging query Dummy -->
+    <sql id="sqlFindDummyPage">
+        select 
+            user_id   userId, 
+            user_name userName
+        from T_USER
+        where USER_ID <![CDATA[>=]]> #{userId}
+    </sql>
+    <select id="findDummyPage" resultType="com.zero.demo.vo.DummyVO">
+        <include refid="sqlFindDummyPage"/>
+        limit #{startIndex}, #{pageSize}
+    </select>
+
+    <select id="findDummyPageCount" resultType="int" parameterType="com.zero.demo.vo.DummyVO">
+        select count(1) recordCount from (<include refid="sqlFindDummyPage"/>)
+    </select>
+
+    <!-- Access Record
+    <insert id="addAccessRecord" parameterType="com.zero.demo.vo.AccessVO">
+        insert into T_VISIT(
+            VISIT_ID,
+            
+            REQUEST_URI,
+            SERVLET_PATH,   
+            METHOD,
+            CONTENT_TYPE,
+            CONTEXT_PATH,
+    
+            LOCAL_ADDRESS,
+            LOCAL_NAME,
+            LOCAL_PORT,
+    
+            REMOTE_ADDRESS,
+            REMOTE_HOST,
+            REMOTE_PORT,
+    
+            W3_ACCOUNT,
+            NAME_ZH,
+            NAME_EN,
+    
+            ACCESS_DATE)
+        values(
+            SEQ_VISIT.Nextval,
+            #{requestURI,    jdbcType=VARCHAR},
+            #{servletPath,   jdbcType=VARCHAR},
+    
+            #{method,        jdbcType=VARCHAR},
+            #{contentType,   jdbcType=VARCHAR},
+            #{contextPath,   jdbcType=VARCHAR},
+    
+            #{localAddress,  jdbcType=VARCHAR},
+            #{localName,     jdbcType=VARCHAR},
+            #{localPort,     jdbcType=NUMERIC},
+    
+            #{remoteAddress, jdbcType=VARCHAR},
+            #{remoteHost,    jdbcType=VARCHAR},
+            #{remotePort,    jdbcType=NUMERIC},
+    
+            #{w3Account,     jdbcType=VARCHAR},
+            #{nameZH,        jdbcType=VARCHAR},
+            #{nameEN,        jdbcType=VARCHAR},
+            
+            now()
+        )
+    </insert>	
+
+    <sql id="findAccessPageOriginal">
+        select
+            VISIT_ID       accessId,
+    
+            REQUEST_URI    requestURI,
+            SERVLET_PATH   servletPath,
+    
+            METHOD         method,
+            CONTENT_TYPE   contentType,
+            CONTEXT_PATH   contextPath,
+    
+            LOCAL_ADDRESS  localAddress,
+            LOCAL_NAME     localName,
+            LOCAL_PORT     localPort,
+    
+            REMOTE_ADDRESS remoteAddress,
+            REMOTE_HOST    remoteHost,
+            REMOTE_PORT    remotePort,
+    
+            W3_ACCOUNT     w3Account,
+            NAME_ZH        nameZH,
+            NAME_EN        nameEN,
+            ACCESS_DATE    accessDate
+        from T_VISIT t
+        order by VISIT_ID desc
+    </sql>
+
+    <select id="findAccessPage" resultType="com.zero.demo.vo.AccessVO">
+        <include refid="findAccessPageOriginal" />
+        limit #{startIndex},#{pageSize}
+    </select>
+
+    <select id="findAccessPageCount" resultType="int">
+        select count(1) recordCount from ( <include refid="findAccessPageOriginal" /> )
+    </select>
+    -->
+    
+    <!-- 
+    <select id="oracleInfo" resultType="String">
+        SELECT 'Oracle version is : '||tt.banner
+        FROM (SELECT rownum rn, banner FROM (select * from v$version) t WHERE rownum <![CDATA[<=]]> 1) tt
+        WHERE rn <![CDATA[>=]]> 0
+    </select>
+     -->
+</mapper>

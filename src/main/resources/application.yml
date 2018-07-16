@@ -1,0 +1,31 @@
+# ENV: SIT
+
+server:
+    context-path: /SpringBootDemo
+    port: 8080
+
+# start DB server, java -jar "H:/lib/java/h2-1.4.197.jar"
+# for multipart, refer to MultipartProperties
+spring:
+    datasource:
+        type: org.apache.tomcat.jdbc.pool.DataSource
+        driver-class-name: org.h2.Driver
+        url: jdbc:h2:tcp://localhost/~/H2DB-SpringRestDemo
+        username: sa
+        password: sa
+        initialSize: 10
+        maxActive: 5
+        maxIdle: 3
+    http:
+        multipart:
+            max-file-size: 100MB
+            max-request-size: 200MB
+
+appConf:
+    configPath: /SpringBootDemo/conf/
+    version: 20180705001
+
+# driver-class-name: com.mysql.jdbc.Driver        
+# url: jdbc:mysql://10.77.163.2:3307/SiteSolution?useUnicode=true&characterEncoding=UTF8&allowMultiQueries=true
+# url: jdbc:h2:~/H2DB-SpringRestDemo
+# url: jdbc:h2:tcp://localhost/~/H2DB-SpringRestDemo

@@ -1,0 +1,51 @@
+# ENV: SIT
+
+appContext:
+    context: /SpringBootDemo
+    port: 9002
+
+logging.level.java.sql: INFO
+logging.level.org.springframework.web.servlet.DispatcherServlet: INFO
+
+#root/zero123#
+spring:
+    datasource:
+        type: org.apache.tomcat.jdbc.pool.DataSource
+        driver-class-name: org.h2.Driver
+        url: jdbc:h2:tcp://localhost/~/H2DB-SpringRestDemo
+        username: sa
+        password: sa
+        initialSize: 10
+        maxActive: 5
+        maxIdle: 3
+    http:
+        multipart:
+            maxFileSize: 100Mb
+            maxRequestSize: 200Mb
+
+# driverClassName: com.mysql.jdbc.Driver
+# url: jdbc:mysql://localhost:3306/pim?useUnicode=true&amp;characterEncoding=UTF-8&allowMultiQueries=true
+
+# logging.level.java.sql: DEBUG
+
+mailServer:
+    smtpHost: smtpscn.zero.com
+    port: 25
+    fromAddress: drservice@zero.com
+    userName: pmail_DRService
+    password: sw9cs!aq
+
+appconf:
+    configDir: /appFiles/pimconf/
+
+# File upload max size
+multipart:
+    maxFileSize: 100Mb
+    maxRequestSize: 100Mb
+
+minio:
+    url: http://192.168.1.101
+    port: 9000
+    accesskey: 0KFXOK2XNQ4S5ECB2ZPF
+    secretkey: rUvQ9TrTRIdbYrjOwy5Oh8JaeuG3fc/xfY4Ml0uR
+    bucket: appfiles
