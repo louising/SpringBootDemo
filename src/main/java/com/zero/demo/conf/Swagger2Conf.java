@@ -34,7 +34,7 @@ public class Swagger2Conf {
                 .termsOfServiceUrl("http://localhost:8080/SpringBootDemo")                
                 .version("1.0")
                 .license("SpringBoot Demo License")
-                .licenseUrl("dummy/list/1")
+                .licenseUrl("dummy/list")
                 .build();
     }
 }

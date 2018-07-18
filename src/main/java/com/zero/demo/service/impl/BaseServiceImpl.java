@@ -26,10 +26,10 @@ import com.zero.demo.ServiceException;
 @SuppressWarnings("unchecked")
 public abstract class BaseServiceImpl {
     protected Logger log = LoggerFactory.getLogger(BaseServiceImpl.class);
-    protected static long startTime = System.currentTimeMillis();
     
     protected String getCurrentUserId() {
-        return "user" + startTime;
+        //After login: HttpUtil.getRequest().setAttribute(SESSION_USER_KEY, new User(100, "Louis"));
+        return "user1001"; //Get from session
     }
 
     protected PageResultVO doPagedQuery(Object dao, String daoMethodName, Object parameterVO, PageVO pageVO) throws ServiceException {

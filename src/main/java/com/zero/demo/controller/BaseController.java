@@ -39,27 +39,23 @@ public abstract class BaseController {
 
     private ExecutorService executorService = Executors.newFixedThreadPool(2);
 
-    /**
-    * Store the user token to memory after use login sucessfully
-    * 
-    * @param userId
-    * @param token
-    */
-    protected void setToken(String userId, String token) {
-        userTokenMap.put(userId, token);
+    protected void checkUserLogin() throws ServiceException {
+        if (BaseConstants.LOGIN_ENABLE) {
+            checkNotNull(getUserInfoBean(), STATUS_NOT_LOGIN);            
+        }
     }
-
+    
     protected void checkToken() throws ServiceException {
         if (BaseConstants.XSRF_ENABLE) {
             //1) Check token is present
-            String token = HttpUtil.getHeader(HEADER_TOKEN);
-            checkParameterNotNull(token, ERR_NO_TOKEN);
+            String mToken = HttpUtil.getHeader(HEADER_TOKEN);
+            checkNotNull(mToken, ERR_NO_TOKEN);
 
             //2) Check token is correct
             UserInfoBean user = getUserInfoBean();
             String userId = user.getUid();
-            String tokenParam = userTokenMap.get(userId);
-            checkParameterTrue(tokenParam != null && tokenParam.equals(token), ERR_NO_TOKEN);
+            String token = userTokenMap.get(userId);
+            checkParameterTrue(token != null && token.equals(mToken), ERR_NO_TOKEN);
         }
     }
 
@@ -99,14 +95,9 @@ public abstract class BaseController {
         HttpUtil.prtRequest();
     }
 
-    protected void checkUserLogin() throws ServiceException {
-        if (BaseConstants.LOGIN_ENABLE) {
-            checkParameterNotNull(getUserInfoBean(), STATUS_NOT_LOGIN);            
-        }
-    }
-
     protected UserInfoBean getUserInfoBean() {
         UserInfoBean uiBean = new UserInfoBean("default_user_01");
+        //HttpUtil.getRequest().setAttribute(SESSION_USER_KEY, new DummyVO(100, "Louis"));
 
         HttpServletRequest request = HttpUtil.getRequest();
         if (request != null) {
@@ -154,20 +145,4 @@ public abstract class BaseController {
 
         return vo;
     }
-/*
-    protected DummyService getDummyService() {
-        return dummyService;
-    }
-
-    protected void setDummyService(DummyService dummyService) {
-        this.dummyService = dummyService;
-    }
-
-    protected ExecutorService getExecutorService() {
-        return executorService;
-    }
-
-    protected void setExecutorService(ExecutorService executorService) {
-        this.executorService = executorService;
-    }*/
 }

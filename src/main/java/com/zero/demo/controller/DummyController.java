@@ -1,12 +1,19 @@
 package com.zero.demo.controller;
 
 import static com.zero.demo.constants.BaseConstants.RESPONSE_TYPE;
+import static com.zero.demo.constants.BaseConstants.STATUS_ERR;
+import static com.zero.demo.constants.BaseConstants.STATUS_NOT_LOGIN;
+import static com.zero.demo.constants.BaseConstants.STATUS_OK;
 import static com.zero.demo.constants.I18NConstants.ERR_FAIL;
-import static com.zero.demo.constants.I18NConstants.MSG_SUCCESS;
+import static com.zero.demo.constants.I18NConstants.*;
 import static com.zero.demo.util.I18nUtil.getMessage;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.UUID;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +35,6 @@ import com.zero.core.domain.ResponseVO;
 import com.zero.core.tasks.AppCallable;
 import com.zero.core.tasks.AppRunnable;
 import com.zero.demo.ServiceException;
-import com.zero.demo.constants.BaseConstants;
 import com.zero.demo.service.DummyService;
 import com.zero.demo.vo.DummyVO;
 import com.zero.demo.vo.UserInfoBean;
@@ -40,8 +46,16 @@ import io.swagger.annotations.ApiOperation;
 @Api(tags = "The Sample Controller", value = "Sample Controller Value", produces = "The Produces")
 /**
  * DummyController
- * 
- * http://ljc.zero.com:8080/SpringBootDemo/dummy/sysInfo
+ *    
+ *   POST http://localhost:8080/SpringBootDemo/dummy/add body { userId: 101, userName: "Alice"}
+ * DELETE http://localhost:8080/SpringBootDemo/dummy/del?dummyName=Alice001 BODY { "userId": 1, "userName": "Alice" }
+ *    PUT http://localhost:8080/SpringBootDemo/dummy/upd?userId=102&userName=Alice02 BODY { "userId": 103, "userName": "Alice03" }
+ *    GET http://localhost:8080/SpringBootDemo/dummy/list
+ *   POST http://localhost:8080/SpringBootDemo/dummy/page/3/2 BODY { "userId": "1", "userName": "Alice" }
+ *   
+ *   POST http://localhost:8080/SpringBootDemo/dummy/uploadDoc BODY form-data
+ *    GET http://localhost:8080/SpringBootDemo/dummy/downloadLog
+ *    GET http://localhost:8080/SpringBootDemo/dummy/sysInfo
  * 
  * @author Administrator
  * @version 2017-11-24
@@ -51,79 +65,79 @@ import io.swagger.annotations.ApiOperation;
 public class DummyController extends BaseController {
     private Logger log = LoggerFactory.getLogger(DummyController.class);
 
-    //By default, get the property from application.yml or application.properties
-    //If from app.yaml/app.properties, add @PropertySource("classpath:/com/acme/app.properties")
+    //By default, read property from application.yml or application.properties
+    //If read from app.yaml/app.properties, add @PropertySource("classpath:/com/acme/app.properties")
     @Value("${appConf.version}")
     private Long version;
-    
+
     @Autowired
     private DummyService dummyService;
 
-    @ApiOperation(value = "get Product Name", notes = "")
+    //Use org.springframework.http.converter.json.Jackson2ObjectMapperBuilder to convert JSON to Object
+    @RequestMapping(path = "/add", method = RequestMethod.POST)
+    public @ResponseBody ResponseVO add(@RequestBody DummyVO param) {
+        return process(new AppRunnable() {
+            public void run() throws ServiceException {
+                log.info("{}", param);
+                dummyService.addDummy(param);
+            }
+        });
+    }
+    
+    //If add @RequestBody, must provide body
+    //Will auto fill paramVO with request parameters
     /**
-    * Get system information
-    * @return
-    */
-    @RequestMapping(path = "/sysInfo", method = RequestMethod.GET, produces = RESPONSE_TYPE)
-    public @ResponseBody ResponseVO sysInfo() {
+     * DELETE http://localhost:8080/SpringBootDemo/dummy/del?dummyName=Alice001 BODY { "userId": "1", "userName": "Alice" }
+     * DELETE http://localhost:8080/SpringBootDemo/dummy/del?dummyName=Alice01&userId=102&userName=Alice02 BODY { "userId": "103", "userName": "Alice03" }
+     */
+    @RequestMapping(path = "/del", method = RequestMethod.DELETE)
+    public @ResponseBody ResponseVO del(@RequestParam("dummyName") String userName,  DummyVO paramVO, @RequestBody DummyVO body) {
+        return process(new AppRunnable() {
+            public void run() throws ServiceException {
+                log.info("userName: {}, param: {}, body {}", userName, paramVO, body);
+                //dummyService.del()
+            }
+        });
+    }
+    
+    //update is a idempotent operation which does not create new resource
+    //URL parameters will be filled to method parameter
+    //if has @RequestBody, must provide body
+    /**
+     * PUT http://localhost:8080/SpringBootDemo/dummy/upd?userId=102&userName=Alice02 BODY { "userId": "103", "userName": "Alice03" }
+     */
+    @RequestMapping(path = "/upd", method = RequestMethod.PUT)
+    public @ResponseBody ResponseVO upd(DummyVO requestParam, @RequestBody DummyVO body) {
+        return process(new AppRunnable() {
+            public void run() throws ServiceException {
+                log.info("Param: {}, Body: {}", requestParam, body);
+                //dummyService.upd()
+            }
+        });
+    }      
+    
+    /**
+     * GET http://localhost:8080/SpringBootDemo/dummy/list
+     */
+    @RequestMapping(path = "/list", method = RequestMethod.GET, produces = RESPONSE_TYPE)
+    public @ResponseBody ResponseVO findDummyList() {
         return process(new AppCallable() {
             public Object run() throws ServiceException {
-                return dummyService.getSysInfo();
-            }
-        });                
-    }
-
-    @RequestMapping(path = "/getToken", method = RequestMethod.GET, produces = RESPONSE_TYPE)
-    public @ResponseBody ResponseVO getToken() {
-        String statusCode = BaseConstants.STATUS_ERR;
-        String statusMsg = "";
-        Object obj = null;
-        try {
-            UserInfoBean ui = getUserInfoBean();
-            if (ui != null) {
-                String token = UUID.randomUUID().toString();
-                setToken(ui.getUid(), token);
-
-                obj = token;
-                statusCode = BaseConstants.STATUS_OK;
-                statusMsg = getMessage(MSG_SUCCESS);
-            } else {
-                statusCode = BaseConstants.STATUS_NOT_LOGIN;
-            }
-        } catch (Exception e) {
-            log.error("{}", e);
-            statusMsg = getMessage(ERR_FAIL);
-        }
-
-        return new ResponseVO(statusCode, statusMsg, obj);
-    }
-
-    /**
-    * http://192.168.101.59:9002/appContext/dummy/list/1?userName=Alice
-    * 
-    * @param projectCode e.g. 1, 33333333, 66666666
-    * @return statusCode=200, e.g. { statusCode: "200", list: [{name: "AAA"}, {name: "BBB"}]} 
-    */
-    @RequestMapping(path = "/list/{userId}", method = RequestMethod.GET, produces = RESPONSE_TYPE)
-    public @ResponseBody ResponseVO findDummyList(@PathVariable int userId, @RequestParam String userName) {
-        log.info("userId: {}, userName: {}", userId, userName);
-        return process(new AppCallable() {
-            public Object run() throws ServiceException {
-                return dummyService.findDummyList(userId);
+                return dummyService.findDummyList(1);
             }
         });
     }
 
-    @ApiOperation(value = "分页查询Dummy列表", notes = "")
-    @ApiImplicitParam(name = "param", value = "Dummy参数详情", required = true, dataType = "DummyVO")
+    @ApiOperation(value = "Paging query Dummy list", notes = "")
+    @ApiImplicitParam(name = "param", value = "Dummy details", required = true, dataType = "DummyVO")
     /**
     * Invoke sample:
-    * POST http://192.168.101.59:9002/appContext/dummy/page/3/2
-    * BODY { "projectCode": "1" }
+    * POST http://localhost:8080/SpringBootDemo/dummy/page/3/2 BODY { "userId": "1", "userName": "Alice" }
+    * 
     * Note: get pageSize, pageIndex from pageVO
     * 
-    * @param scheme 
-    * @param pageVO (pageSize, pageIndex)
+    * @param param 
+    * @param pageVO (pageSize, pageIndex), pageIndex start from 1
     * @return PagedResultVO {}
     */
     @RequestMapping(path = "/page/{pageSize}/{pageIndex}", method = RequestMethod.POST, produces = RESPONSE_TYPE)
@@ -134,17 +148,8 @@ public class DummyController extends BaseController {
             }
         });
     }
-    
-    @RequestMapping(path = "/add", method = RequestMethod.POST, produces = RESPONSE_TYPE)
-    public @ResponseBody ResponseVO findDummyPage(@RequestBody DummyVO param) {
-        return process(new AppCallable() {
-            public Object run() throws ServiceException {
-                return dummyService.addDummy(param);
-            }
-        });
-    }    
 
-    @RequestMapping(path = "/log", method = RequestMethod.GET, produces = RESPONSE_TYPE)
+    @RequestMapping(path = "/downloadLog", method = RequestMethod.GET, produces = RESPONSE_TYPE)
     public @ResponseBody ResponseVO downloadLog() {
         return process(new AppRunnable() {
             public void run() throws ServiceException {
@@ -153,38 +158,78 @@ public class DummyController extends BaseController {
         });
     }
 
-    /**
-    * 
-    * Invoke sample:
-    * POST http://192.168.101.59:9002/appContext/dummy/visit/3/2
-    * 
-    * @param pageVO (pageSize, pageIndex)
-    * @return PagedResultVO {}
-    */
-    @RequestMapping(path = "/visit/{pageSize}/{pageIndex}", method = RequestMethod.GET, produces = RESPONSE_TYPE)
-    public @ResponseBody ResponseVO findAccessPage(PageVO pageVO) {
-        return process(new AppCallable() {
-            public Object run() throws ServiceException {
-                return dummyService.findAccessPage(pageVO);
+    @RequestMapping(path = "/uploadDoc", consumes = "multipart/form-data", method = RequestMethod.POST, produces = RESPONSE_TYPE)
+    public @ResponseBody ResponseVO uploadDoc(@RequestParam MultipartFile multiFile) {
+        return process(new AppRunnable() {
+            public void run() throws ServiceException {
+                try (InputStream in = multiFile.getInputStream()) {
+                     FileUtils.copyInputStreamToFile(in, new File("c:/" + multiFile.getOriginalFilename()));
+                } catch (IOException e) {
+                    log.error(e.getMessage());
+                    throw new ServiceException(ERR_UPLOAD);
+                }                
             }
         });
     }
 
-    @RequestMapping(path = "/uploadDoc", consumes = "multipart/form-data", method = RequestMethod.POST, produces = RESPONSE_TYPE)
-    public @ResponseBody ResponseVO uploadDoc(@RequestParam MultipartFile multiFile) {
+    /**
+     * Test PathVariable, RequestParam
+     * GET http://localhost:8080/SpringBootDemo/dummy/testPathAndParams/1?userName=Alice
+     */
+    @RequestMapping(path = "/testPathAndParams/{userId}", method = RequestMethod.GET, produces = RESPONSE_TYPE)
+    public @ResponseBody ResponseVO testParams(@PathVariable int userId, @RequestParam String userName) {
         return process(new AppCallable() {
             public Object run() throws ServiceException {
-                return dummyService.uploadFile(multiFile);
+                log.info("userId: {}, userName: {}", userId, userName);
+                return "OK";
             }
         });
     }
+
+    @ApiOperation(value = "get system information", notes = "")
+    /**
+    * Get system information
+    */
+    @RequestMapping(path = "/sysInfo", method = RequestMethod.GET, produces = RESPONSE_TYPE)
+    public @ResponseBody ResponseVO sysInfo() {
+        return process(new AppCallable() {
+            public Object run() throws ServiceException {
+                return dummyService.getSysInfo();
+            }
+        });
+    }
+
+    @RequestMapping(path = "/getToken", method = RequestMethod.GET, produces = RESPONSE_TYPE)
+    public @ResponseBody ResponseVO getToken() {
+        String statusCode = STATUS_ERR;
+        String statusMsg = "";
+        Object obj = null;
+        try {
+            UserInfoBean ui = getUserInfoBean();
+            if (ui != null) {
+                String token = UUID.randomUUID().toString();
+                userTokenMap.put(ui.getUid(), token);
+
+                obj = token;
+                statusCode = STATUS_OK;
+                statusMsg = getMessage(MSG_SUCCESS);
+            } else {
+                statusCode = STATUS_NOT_LOGIN;
+            }
+        } catch (Exception e) {
+            log.error("{}", e);
+            statusMsg = getMessage(ERR_FAIL);
+        }
+
+        return new ResponseVO(statusCode, statusMsg, obj);
+    }
     
     /**
-    * Process Fortify warning
-    * 
-    * @param binder
-    * @param request
-    */
+     * Process Fortify warning
+     * 
+     * @param binder
+     * @param request
+     */
     @InitBinder
     public void initBinder(WebDataBinder binder, WebRequest request) {
         binder.setDisallowedFields("createTime");

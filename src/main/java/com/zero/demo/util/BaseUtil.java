@@ -167,7 +167,7 @@ public class BaseUtil {
     }
 
     @SuppressWarnings("rawtypes")
-    public static void checkParameterNotNull(Object obj, String errCode) throws ServiceException {
+    public static void checkNotNull(Object obj, String errCode) throws ServiceException {
         if (obj == null || (obj instanceof String && isEmpty((String) obj)) || (obj instanceof List && ((List) obj).isEmpty()))
             throw new ServiceException(errCode);
     }
@@ -292,7 +292,7 @@ public class BaseUtil {
 
         try {
             File file = org.apache.commons.io.FileUtils.getFile(fullFileName);
-            checkParameterNotNull(file, "ERR_WRITE_DOC");
+            checkNotNull(file, "ERR_WRITE_DOC");
             org.apache.commons.io.FileUtils.copyInputStreamToFile(in, file);
         } catch (Exception e) {
             throw new ServiceException("ERR_WRITE_DOC");

@@ -19,6 +19,13 @@ import com.zero.demo.vo.DummyVO;
 public interface DummyService {
     Map<String, String> getSysInfo();
 
+    /**
+     * Find dummy list where userId >= ${userId}
+     * 
+     * @param userId
+     * @return
+     * @throws ServiceException
+     */
     List<DummyVO> findDummyList(int userId) throws ServiceException;
 
     PageResultVO findDummyPage(DummyVO scheme, PageVO pageVO) throws ServiceException;

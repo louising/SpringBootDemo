@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.zero.core.domain.AccessVO;
@@ -63,8 +64,6 @@ public class DummyServiceImpl extends BaseServiceImpl implements DummyService {
     }
 
     public Map<String, String> getSysInfo() {
-        HttpUtil.getRequest().setAttribute("userBean", new DummyVO(100, "Louis"));
-        
         Map<String, String> map = BaseUtil.getSysInfo();
         map.put("version", appConf.getVersion() + "");
         map.put("configPath", configVO.getConfigPath());
@@ -83,16 +82,18 @@ public class DummyServiceImpl extends BaseServiceImpl implements DummyService {
         return dummyDao.findDummyList(userId);
     }
 
-    public PageResultVO findDummyPage(DummyVO paramaterVO, PageVO pageVO) throws ServiceException {        
-        return doPagedQuery(dummyDao, "findDummyPage", paramaterVO, pageVO);
+    public PageResultVO findDummyPage(DummyVO param, PageVO pageVO) throws ServiceException {
+        log.info("Param: {}, PageVO: {}", param, pageVO);
+        return doPagedQuery(dummyDao, "findDummyPage", param, pageVO);
     }
     
+    @Transactional //rollbackFor = ServiceException.class
     public Integer addDummy(DummyVO dummyVO) throws ServiceException {
         log.info("add dummy: " + dummyVO);
-        if (dummyVO.getUserName() == null)
-            throw new ServiceException("ERR_USER_NAME_CAN_NOT_NULL");
-
         dummyDao.addDummy(dummyVO);
+        
+        if (dummyVO.getUserName().equals("ERROR"))
+            throw new ServiceException("ERR_USER_NAME");
 
         return dummyVO.getUserId();
     }    

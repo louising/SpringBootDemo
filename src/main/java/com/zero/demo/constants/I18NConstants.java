@@ -13,6 +13,6 @@ public interface I18NConstants {
 
     //Error message
     String ERR_NO_TOKEN = "ERR_NO_TOKEN";
-    String ERR_FAIL = "ERR_FAIL"; 
-    String ERR_PROJECT_CODE_EMPTY = "ERR_PROJECT_CODE_EMPTY";
+    String ERR_FAIL = "ERR_FAIL";
+    String ERR_UPLOAD = "ERR_UPLOAD";
 }

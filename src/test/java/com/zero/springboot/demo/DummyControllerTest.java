@@ -18,11 +18,10 @@ import org.springframework.web.client.RestTemplate;
 import com.zero.demo.DemoApplication;
 
 /**
- * RestTemplate is in spring-web.jar
+ * RestTemplate lies in spring-web.jar
  * By default the RestTemplate relies on standard JDK facilities to establish HTTP connections.
- *  
  * If switch to other HTTP library, such as httpclient(Netty, OkHttp), it should be 4.5.5
- * It maybe indirect dependency, such as depends on minio which depends on httpclient 4.1 that will missing HTTPClients.
+ * There maybe indirect dependency, such as minio which depends on httpclient 4.1 that will missing HTTPClients.
  * 
  * @author Louisling
  * @version 2018-07-10
