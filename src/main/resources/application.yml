@@ -3,6 +3,14 @@
 server:
     context-path: /SpringBootDemo
     port: 8080
+    session:
+        cookie:
+            name: JSESSIONID
+            domain: zero.com
+            path: /
+            http-only: false
+            secure: false
+            max-age: -1
 
 # start DB server, java -jar "H:/lib/java/h2-1.4.197.jar"
 # multipart which refer to MultipartProperties

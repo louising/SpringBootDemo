@@ -5,13 +5,16 @@ import static com.zero.demo.constants.BaseConstants.STATUS_ERR;
 import static com.zero.demo.constants.BaseConstants.STATUS_NOT_LOGIN;
 import static com.zero.demo.constants.BaseConstants.STATUS_OK;
 import static com.zero.demo.constants.I18NConstants.ERR_FAIL;
-import static com.zero.demo.constants.I18NConstants.*;
+import static com.zero.demo.constants.I18NConstants.ERR_UPLOAD;
+import static com.zero.demo.constants.I18NConstants.MSG_SUCCESS;
 import static com.zero.demo.util.I18nUtil.getMessage;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
+
+import javax.servlet.http.Cookie;
 
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -36,6 +39,7 @@ import com.zero.core.tasks.AppCallable;
 import com.zero.core.tasks.AppRunnable;
 import com.zero.demo.ServiceException;
 import com.zero.demo.service.DummyService;
+import com.zero.demo.util.HttpUtil;
 import com.zero.demo.vo.DummyVO;
 import com.zero.demo.vo.UserInfoBean;
 
@@ -120,9 +124,10 @@ public class DummyController extends BaseController {
      * GET http://localhost:8080/SpringBootDemo/dummy/list
      */
     @RequestMapping(path = "/list", method = RequestMethod.GET, produces = RESPONSE_TYPE)
-    public @ResponseBody ResponseVO findDummyList() {
+    public @ResponseBody ResponseVO findDummyList(DummyVO param) {
         return process(new AppCallable() {
             public Object run() throws ServiceException {
+                log.info("Param: {}", param);
                 return dummyService.findDummyList(1);
             }
         });
@@ -192,13 +197,28 @@ public class DummyController extends BaseController {
     */
     @RequestMapping(path = "/sysInfo", method = RequestMethod.GET, produces = RESPONSE_TYPE)
     public @ResponseBody ResponseVO sysInfo() {
+        HttpUtil.getRequest().getSession().setAttribute("USER_INFO_BEAN", "Louis");
+        
         return process(new AppCallable() {
             public Object run() throws ServiceException {
                 return dummyService.getSysInfo();
             }
         });
     }
+    
+    @RequestMapping(path = "/fails", method = RequestMethod.GET, produces = RESPONSE_TYPE)
+    public @ResponseBody ResponseVO fails() {
+        throw new ServiceException("Assumed Error");
+    }    
 
+    protected void addCookie() {
+        Cookie k = new Cookie("USER_NAME", "Louis");
+        k.setMaxAge(-1); //0: delete -1: delete when browser exit
+        k.setDomain("zero.com");
+        k.setPath("/");
+        HttpUtil.getResponse().addCookie(k);
+    }
+    
     @RequestMapping(path = "/getToken", method = RequestMethod.GET, produces = RESPONSE_TYPE)
     public @ResponseBody ResponseVO getToken() {
         String statusCode = STATUS_ERR;

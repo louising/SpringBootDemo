@@ -28,8 +28,8 @@ public class FilterConf {
         return new CorsFilter(source);
     }
     
-    @Bean
+    //@Bean
     public Filter loginFilter() {
         return new LoginFilter();
-    }    
+    }
 }

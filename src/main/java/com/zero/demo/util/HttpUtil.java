@@ -16,6 +16,7 @@ import java.util.Map;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,6 +89,16 @@ public class HttpUtil {
         }
         return request;
     }
+    
+    public static HttpServletResponse getResponse() {
+        HttpServletResponse response = null;
+
+        RequestAttributes attr = RequestContextHolder.getRequestAttributes();
+        if (attr != null) {
+            response = ((ServletRequestAttributes) attr).getResponse();
+        }
+        return response;
+    }    
 
     /**
     * Get header or parameter of HTTP request 
@@ -297,7 +308,7 @@ public class HttpUtil {
         Cookie[] cookies = request.getCookies();
         if (cookies != null)
             for (Cookie k : cookies) {
-                cookieStr += SEP + String.format("%s=%s Domain:% Path:%s", k.getName(), k.getValue(), k.getDomain(), k.getPath()) + "\n";
+                cookieStr += SEP + String.format("%s=%s Domain:%s Path:%s", k.getName(), k.getValue(), k.getDomain(), k.getPath()) + "\n";
             }
         if (cookieStr.equals(""))
             cookieStr = SEP + "None" + "\n"; 

@@ -78,6 +78,7 @@ public abstract class BaseController {
             result.setStatusCode(e.getErrCode());
             result.setStatusMsg(getMessage(e.getErrCode(), e.getArgs()));
         } catch (Exception e) {
+            e.printStackTrace();
             log.error(e.toString());
             result.setStatusCode(STATUS_ERR);
             result.setStatusMsg(getMessage(STATUS_ERR));
