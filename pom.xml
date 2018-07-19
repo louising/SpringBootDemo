@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -16,7 +17,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <maven.test.skip>true</maven.test.skip>
-        <springboot.version>1.4.6.RELEASE</springboot.version>
+        <springboot.version>1.5.8.RELEASE</springboot.version> <!-- 1.4.6.RELEASE -->
         <poi.version>3.15</poi.version>
         <swagger.version>2.7.0</swagger.version>
         <maven.build.timestamp.format>yyyyMMdd</maven.build.timestamp.format> <!-- use: ${maven.build.timestamp} -->
@@ -218,6 +219,7 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <includes>
+                    <include>**/*.*</include>  <!-- -->
                     <include>**/*.properties</include>
                     <include>**/*.xml</include>
                     <include>**/*.tld</include>

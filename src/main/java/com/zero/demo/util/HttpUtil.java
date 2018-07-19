@@ -31,7 +31,10 @@ import com.zero.demo.ServiceException;
 public class HttpUtil {
     static Logger log = LoggerFactory.getLogger(HttpUtil.class);
 
-    public static void main(String[] args) throws Exception {
+    /*public static void main(String[] args) throws Exception {
+    }*/
+    
+    static void test() throws Exception {
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json;charset=UTF-8");
         headers.put("languageToken", "Zero");

@@ -1,13 +1,10 @@
 package com.zero.demo.conf;
 
-
-import java.util.Date;
-
 //import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CountJobConf {    
+public class CountJobConf {
     /**
      * Date sequence generator for a
      * <a href="http://www.manpagez.com/man/5/crontab/">Crontab pattern</a>,
@@ -34,10 +31,12 @@ public class CountJobConf {
         System.out.printf("%1$tF %1$tT %1$tL \n", System.currentTimeMillis());
     }
 
-    public static void main(String[] args) {
+    /*   
+      public static void main(String[] args) {
       //%1$tF: the first time argument, F: 2018-02-26 T: 17:52:03 L: millisecond: 324 A: Monday/Tuesday.. 
       //%1$s the first string argument %2$tT: the second time argument
       System.out.printf("%1$s %2$tT \n", "Now is ", new Date());
       System.out.printf("%1$tF %1$tT %1$tL %1$tA", System.currentTimeMillis());
-    }    
+    }   
+    */
 }

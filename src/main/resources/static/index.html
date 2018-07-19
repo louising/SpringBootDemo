@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <!-- <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> -->
+
+    <title>Spring Rest Demo</title>
+
+    <script type="text/javascript" src="js/jquery-1.8.3.js"></script>
+
+    <style>
+        #divResult {
+            border: 1px dashed gray;
+            margin: 10px 0;
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Spring Restful Demo</h1>
+    <div id="divResult">Div Result</div>
+
+    <button id="btn1">GET: Param to VO</button>
+    <button id="btn2">GET: Param</button>
+    <button id="btn3">GET: List</button>
+    <div>
+        <span id="spanCookie">Cookie Span</span>
+    </div>
+    
+    <script type="text/javascript">
+        ~function init() {
+            addCookie("userName", "Alice张三Alice123", 3600);
+            addCookie("userAge", "23");
+
+            //$("#spanCookie").text("Cookies **:" + document.cookie + " Init ");
+            get("spanCookie").innerHTML = "Cookies:" + document.cookie + " Init ";
+
+            /*
+            $.get("/CEM_API_Framework/dummy/getUser5/?userId=105&userName=中国Chris", function(data, status) {
+            $("#divCookie").text(JSON.stringify(data));
+            });
+            */
+
+            get("btn1").onclick = function () {
+                $.get("/SpringBootDemo/dummy/list/?userId=101&userName=中国Chris", function (data, status) {
+                //$.get("http://ljc.zero.com:8080/SpringBootDemo/dummy/list/?userId=101&userName=中国Chris", function (data, status) {
+                    $("#divResult").text(JSON.stringify(data));
+                    get("spanCookie").innerHTML = "Cookies:" + document.cookie + " End.";
+                    //$("#spanCookie").text("Cookies:" + document.cookie + " End ");
+                });
+            };
+
+            get("btn2").onclick = function () {
+                $.get("/SpringBootDemo/dummy/list/?userId=102&userName=%E4%B8%AD%E5%9B%BDBob", function (data, status) {
+                    $("#divResult").text(JSON.stringify(data));
+                    //get("spanCookie").innerHTML = "Cookies:" + document.cookie + " End.";
+                });
+            };
+            get("btn3").onclick = function () {
+                $.get("/SpringBootDemo/dummy/list", function (data, status) {
+                    $("#divResult").text(JSON.stringify(data));
+                    //get("spanCookie").innerHTML = "Cookies:" + document.cookie + " End.";
+                });
+            };
+        }();
+
+        function addCookie(cookieName, cookieValue, seconds) {
+            var expires = "";
+            if (seconds) {
+                var exdate = new Date();
+                //exdate.setDate(exdate.getDate() + expireDays);
+                exdate.setSeconds(exdate.getSeconds() + seconds);
+                expires = ";expires=" + exdate.toGMTString();
+            }
+
+            document.cookie = cookieName + "=" + escape(cookieValue) + expires + "; path=/; domain=zero.com";
+        }
+
+        function prt(obj) {
+            document.write(obj + "<br/>");
+        }
+        function get(elementId) {
+            return document.getElementById(elementId);
+        }
+
+    </script>
+
+</body>
+
+</html>
