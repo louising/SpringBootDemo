@@ -12,6 +12,8 @@ It demonstrates these features
 A) Schedule
 B) Encryption/Decryption
 C) Session management(just for simple demo, in product environment should use SSL and encrypted cookie, or SSO)
+D) Support static content, by default read the directory:  /static (or /public or /resources or /META-INF/resources) in the classpath;
+   Remember: pom.xml/resources/resource/includes/<include>**/*.*</include> 
 
 This demo application is arranged in 3 lays
 1) Dao        //Access DB
