@@ -1,5 +1,11 @@
 package com.zero.demo;
 
+/**
+ * Exception that throw when a error occurs in service layer
+ * 
+ * @author Louisling
+ * @version 2018-07-25
+ */
 public class ServiceException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
