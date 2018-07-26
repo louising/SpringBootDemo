@@ -7,17 +7,26 @@ import java.sql.Statement;
 
 import javax.sql.DataSource;
 
-import com.zero.core.jdbc.util.DataSourceFactory;
+import com.zero.demo.util.SimpleDataSource;
 
 public class JdbcDemo {
-
+    static DataSource dataSource;
+    
+    static {
+        String driverClass = "org.h2.Driver";
+        String url = "jdbc:h2:tcp://localhost/~/H2DB-SpringRestDemo";
+        String user = "sa";
+        String pwd = "sa";
+    
+        dataSource = new SimpleDataSource(driverClass, url, user, pwd);         
+    }
+    
     public static void main(String[] args) throws Exception {
         addData();        
     }
 
     protected static void addData() throws SQLException {
-        DataSource ds = DataSourceFactory.h2Datasource;
-        Connection con = ds.getConnection();
+        Connection con = dataSource.getConnection();
         con.setAutoCommit(false);
 
         //1) clear users

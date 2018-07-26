@@ -1,3 +1,11 @@
+-------------------------------
+cd ../SpringBootDemo
+git init
+git remote add origin git@github.com:louising/SpringBootDemo.git
+git checkout -b dev
+-------------------------------
+
+
 It demonstrates these features
 -------------------------------    
 1) Expose RESTful web service by Spring Boot through annotation.
