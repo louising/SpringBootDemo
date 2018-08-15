@@ -2,6 +2,7 @@ package com.zero.demo.service.impl;
 
 import static com.zero.demo.constants.BaseConstants.DIR_CURR;
 import static com.zero.demo.constants.I18NConstants.ERR_FAIL;
+import static com.zero.demo.constants.I18NConstants.ERR_UPLOAD;
 import static com.zero.demo.util.BaseUtil.getTmpDir;
 import static com.zero.demo.util.BaseUtil.writeFile;
 
@@ -12,12 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.zero.core.domain.AccessVO;
@@ -150,5 +153,19 @@ public class DummyServiceImpl extends BaseServiceImpl implements DummyService {
         }
 
         return fileId;
+    }
+    
+    public void uploadDoc(@RequestParam MultipartFile multiFile) throws ServiceException {
+        try (InputStream in = multiFile.getInputStream()) {
+            FileUtils.copyInputStreamToFile(in, new File("c:/" + multiFile.getOriginalFilename()));
+        } catch (IOException e) {
+            log.error(e.getMessage());
+            throw new ServiceException(ERR_UPLOAD);
+        }
+    }
+    
+    public String testParams(int userId, String userName) throws ServiceException {
+        log.info("userId: {}, userName: {}", userId, userName);
+        return "OK";
     }
 }

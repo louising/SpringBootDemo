@@ -59,7 +59,15 @@ public abstract class BaseController {
         }
     }
 
-    protected ResponseVO process(AppTask task) {
+    protected ResponseVO process(AppRunnable task) {
+        return processTask(task);
+    }
+    
+    protected ResponseVO process(AppCallable task) {
+        return processTask(task);
+    }    
+    
+    private ResponseVO processTask(AppTask task) {
         ResponseVO result = new ResponseVO();
         try {
             checkUserLogin();

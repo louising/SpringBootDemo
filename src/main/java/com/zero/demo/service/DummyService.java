@@ -2,6 +2,7 @@ package com.zero.demo.service;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.zero.core.domain.AccessVO;
@@ -39,4 +40,9 @@ public interface DummyService {
     PageResultVO findAccessPage(PageVO pageVO) throws ServiceException;
 
     String uploadFile(MultipartFile multiFile) throws ServiceException;
+    
+    void uploadDoc(@RequestParam MultipartFile multiFile) throws ServiceException;
+    
+    String testParams(int userId, String userName) throws ServiceException;
 }
+
