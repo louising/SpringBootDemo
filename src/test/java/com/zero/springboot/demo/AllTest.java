@@ -1,5 +1,6 @@
 package com.zero.springboot.demo;
 
+/*
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
@@ -10,6 +11,7 @@ import org.junit.runners.Suite.SuiteClasses;
     DummyServiceATest.class, 
     DummyServiceBTest.class}
 ) 
+*/
 public class AllTest {
 
 }

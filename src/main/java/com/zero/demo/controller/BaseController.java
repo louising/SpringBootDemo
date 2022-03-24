@@ -34,9 +34,6 @@ public abstract class BaseController {
 
     static final Map<String, String> userTokenMap = new ConcurrentHashMap<>(); //Map(userID, Token)
 
-    @Autowired
-    private DummyService dummyService;
-
     private ExecutorService executorService = Executors.newFixedThreadPool(2);
 
     protected void checkUserLogin() throws ServiceException {
@@ -72,7 +69,7 @@ public abstract class BaseController {
         try {
             checkUserLogin();
             checkToken();
-            logVisit();
+            //logVisit();
             
             if (task instanceof AppCallable) {
                 Object value = ((AppCallable) task).run();
@@ -95,7 +92,7 @@ public abstract class BaseController {
         return result;
     }
     
-    private void logVisit() {
+    void logVisit() {
         StringBuilder sb = new StringBuilder("\n#### ");
         HttpServletRequest req = HttpUtil.getRequest();
         sb.append(req.getRemoteHost() + " visit " + req.getRequestURL()); //URL full url, URI just path without host:port
@@ -126,7 +123,7 @@ public abstract class BaseController {
         executorService.execute(new Runnable() {
             public void run() {
                 try {
-                    dummyService.addAccessRecord(vo);
+                    //dummyService.addAccessRecord(vo);
                 } catch (ServiceException e) {
                     log.error(e.getMessage());
                 }

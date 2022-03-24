@@ -25,14 +25,37 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.zero.demo.ServiceException;
 
 public class HttpUtil {
     static Logger log = LoggerFactory.getLogger(HttpUtil.class);
 
-    /*public static void main(String[] args) throws Exception {
-    }*/
+    public static void main(String[] args) throws Exception {
+        //testHttpGET();
+        
+        String res = sendGet("http://localhost:8080/SpringBootDemo/user/list", null);
+        System.out.println(res);
+        
+        // {"notebook_id":39119531,"notebook_name":"日记本","liked_by_user":false}
+        JSONObject obj = JSONObject.parseObject(res);
+        JSONArray array = obj.getJSONArray("data");
+        for (int i = 0, n = array.size(); i < n; i++) {
+            System.out.println(i + ": " + array.getJSONObject(i));
+        }
+    }
+
+    protected static void testHttpGET() {
+        String res = sendGet("https://www.jianshu.com/shakespeare/v2/notes/4897127f016b/book", null);
+        System.out.println(res);
+        
+        // {"notebook_id":39119531,"notebook_name":"日记本","liked_by_user":false}
+        JSONObject obj = JSONObject.parseObject(res);
+        System.out.println(obj.getString("notebook_name"));        
+        String a = obj.getString("abc");
+        log.info("Null = null:{} {}", (a == null), " End.");
+    }
     
     static void test() throws Exception {
         Map<String, String> headers = new HashMap<>();

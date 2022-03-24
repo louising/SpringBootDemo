@@ -7,9 +7,13 @@ import java.sql.Statement;
 
 import javax.sql.DataSource;
 
-import com.zero.demo.util.SimpleDataSource;
+import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JdbcDemo {
+    static Logger log = LoggerFactory.getLogger(JdbcDemo.class);
+    
     static DataSource dataSource;
     
     static {
@@ -18,11 +22,16 @@ public class JdbcDemo {
         String user = "sa";
         String pwd = "sa";
     
-        dataSource = new SimpleDataSource(driverClass, url, user, pwd);         
+        // dataSource = new SimpleDataSource(driverClass, url, user, pwd);
     }
     
+    
     public static void main(String[] args) throws Exception {
-        addData();        
+        //addData();   
+        log.info("User {} Age {}", "Alice", 21);
+        System.out.println(FilenameUtils.getExtension("D:/LJC_Note.txt"));
+        //org.apache.commons.io.FileUtils.copyFile(new File("D:/LJC_Note.txt"), new File("d:/a.txt"));
+        //org.apache.commons.io.FileUtils.copyInputStreamToFile(new FileInputStream(new File("D:/LJC_Note.txt")), new File("d:/a.txt"));
     }
 
     protected static void addData() throws SQLException {

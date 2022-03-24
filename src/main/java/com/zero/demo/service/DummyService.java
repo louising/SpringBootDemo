@@ -28,6 +28,8 @@ public interface DummyService {
      * @throws ServiceException
      */
     List<DummyVO> findDummyList(int userId) throws ServiceException;
+    
+    List<DummyVO> findProjectList();
 
     PageResultVO findDummyPage(DummyVO scheme, PageVO pageVO) throws ServiceException;
 

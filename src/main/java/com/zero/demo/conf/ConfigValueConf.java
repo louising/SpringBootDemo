@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ConfigValueConf {
-    @Value("${appConf.configPath}")
+    @Value("${appconf.config-path}")
     private String configPath;
 
     public String getConfigPath() {

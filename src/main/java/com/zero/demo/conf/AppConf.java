@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * @version 2018-07-01
  */
 @Component
-@ConfigurationProperties(prefix = "appConf", ignoreUnknownFields = true)
+@ConfigurationProperties(prefix = "appconf", ignoreUnknownFields = true)
 public class AppConf {
     private String configPath;
     private Long version;

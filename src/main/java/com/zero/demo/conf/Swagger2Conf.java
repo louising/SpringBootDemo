@@ -14,8 +14,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 /**
 * URL: http://localhost:8080/SpringBootDemo/swagger-ui.html
 */
-@Configuration
-@EnableSwagger2
+//@Configuration
+//@EnableSwagger2
 public class Swagger2Conf {
     @Bean
     public Docket createRestApi() {
@@ -28,6 +28,9 @@ public class Swagger2Conf {
     }
     
     private ApiInfo apiInfo() {
+        return new ApiInfoBuilder().title("SpringBoot Demo API DOC").build();
+        
+        /*
         return new ApiInfoBuilder()
                 .title("SpringBoot Demo API DOC")
                 .description("SpringBoot Demo API Desc")
@@ -36,5 +39,6 @@ public class Swagger2Conf {
                 .license("SpringBoot Demo License")
                 .licenseUrl("dummy/list")
                 .build();
+         */
     }
 }

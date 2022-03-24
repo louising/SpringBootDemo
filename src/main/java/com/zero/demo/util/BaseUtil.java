@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -153,6 +154,11 @@ public class BaseUtil {
 
     public static boolean isEmpty(String str) {
         return str == null || str.trim().equals("");
+    }
+    
+    public static String getPkCode() {
+        String token = UUID.randomUUID().toString();
+        return token.replace("-", ""); //32-bits
     }
 
     public static void checkParameterTrue(boolean parameter, String errCode, Object... args) throws ServiceException {

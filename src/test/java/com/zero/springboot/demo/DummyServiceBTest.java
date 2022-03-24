@@ -1,22 +1,27 @@
 package com.zero.springboot.demo;
 
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.zero.demo.DemoApplication;
+import com.zero.demo.SpringBootDemoApplication;
 import com.zero.demo.dao.DummyDao;
-import com.zero.demo.vo.DummyVO;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = DemoApplication.class) 
+@SuppressWarnings("rawtypes")
+/**
+ * DummyServiceBTest
+ * 
+ * @author Louisling
+ * @since 2021-12-10
+ */
+@SpringBootTest(classes = SpringBootDemoApplication.class) 
 public class DummyServiceBTest {
     Logger log = LoggerFactory.getLogger(DummyServiceBTest.class);
     
@@ -25,15 +30,16 @@ public class DummyServiceBTest {
     
     @Test
     public void testFindSingleDummy() {
-        List<DummyVO> list = dummyDao.findDummyList(3);
+        List<Map> list = dummyDao.users();
         log.info("Dummy List: " + list);
-        Assert.assertTrue(list.size() > 0);
+        assertEquals(true, list != null && list.size() > 0);
+        assertEquals(true, list.size() > 0);
     }
     
     @Test
     public void testFindMultipleDummy() {
-        List<DummyVO> list = dummyDao.findDummyList(1000);
+        List<Map> list = dummyDao.users();
         log.info("Dummy List: " + list);
-        Assert.assertTrue(list.size() == 0);
+        assertEquals(true, list != null && list.size() == 0);
     }
 }

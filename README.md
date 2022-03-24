@@ -1,10 +1,16 @@
+2021-12-16 pom.xml upgrade version
 -------------------------------
-cd ../SpringBootDemo
+spring-boot-starter-web:2.4.13, 
+springfox-boot-starter:3.0.0, 
+mybatis-spring-boot-starter:2.1.4, 
+fastjson:1.2.78, 
+junit:5.8.0
+
+Git
+-------------------------------    
 git init
 git remote add origin git@github.com:louising/SpringBootDemo.git
 git checkout -b dev
--------------------------------
-
 
 It demonstrates these features
 -------------------------------    
@@ -68,10 +74,15 @@ CREATE TABLE t_user(
 Started DemoApplication in 9.972 seconds (JVM running for 10.838) 
        
 6) Access RESTful web services in browser, JS, PostMan or other client sides.
-API DOC: http://localhost:8080/SpringBootDemo/swagger-ui.html
+API DOC: 
+http://localhost:8080/SpringBootDemo/swagger-ui/index.html
+http://localhost:8080/SpringBootDemo/v2/api-docs
+http://localhost:8080/SpringBootDemo/v3/api-docs
    
-GET http://localhost:8080/SpringBootDemo/dummy/sysInfo
-GET http://localhost:8080/SpringBootDemo/dummy/list
+http://localhost:8080/SpringBootDemo/dummy/sysInfo
+http://localhost:8080/SpringBootDemo/user/list
+http://localhost:8080/SpringBootDemo/user/page?pageSize=5&pageIndex=1
+
 //Paging query: /dummy/page/{pageSize}/{pageIndex}
 POST http://localhost:8080/SpringBootDemo/dummy/page/3/1  BODY: { "userId": 2, "userName": "Alice"}
                    
@@ -137,4 +148,3 @@ C. Encryption/Decryption
     
 D. Session management(just for simple demo, in product environment should use SSL and encrypted cookie, or SSO)
    SessionManager.java
-              

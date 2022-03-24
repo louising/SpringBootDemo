@@ -7,6 +7,9 @@ import static com.zero.demo.constants.I18NConstants.ERR_FAIL;
 import static com.zero.demo.constants.I18NConstants.MSG_SUCCESS;
 import static com.zero.demo.util.I18nUtil.getMessage;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.Cookie;
@@ -15,10 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -26,13 +27,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.alibaba.fastjson.JSONObject;
 import com.zero.core.domain.PageVO;
 import com.zero.core.domain.ResponseVO;
 import com.zero.demo.ServiceException;
-import com.zero.demo.service.DummyService;
+import com.zero.demo.service.impl.DummyServiceImpl;
 import com.zero.demo.util.HttpUtil;
 import com.zero.demo.vo.DummyVO;
 import com.zero.demo.vo.UserInfoBean;
@@ -43,8 +44,8 @@ import io.swagger.annotations.ApiOperation;
 
 @Api(tags = "The Sample Controller", value = "Sample Controller Value", produces = "The Produces")
 /**
- * DummyController
- *    
+ * http://localhost:8080/SpringBootDemo/swagger-ui.html
+ * 
  *   POST http://localhost:8080/SpringBootDemo/dummy/add body { userId: 101, userName: "Alice"}
  * DELETE http://localhost:8080/SpringBootDemo/dummy/del?dummyName=Alice001 BODY { "userId": 1, "userName": "Alice" }
  *    PUT http://localhost:8080/SpringBootDemo/dummy/upd?userId=102&userName=Alice02 BODY { "userId": 103, "userName": "Alice03" }
@@ -54,7 +55,8 @@ import io.swagger.annotations.ApiOperation;
  *   POST http://localhost:8080/SpringBootDemo/dummy/uploadDoc BODY form-data
  *    GET http://localhost:8080/SpringBootDemo/dummy/downloadLog
  *    GET http://localhost:8080/SpringBootDemo/dummy/sysInfo
- * 
+ *    GET http://localhost:8080/SpringBootDemo/dummy/list2?sessionCode=123
+ *    
  * @author Administrator
  * @version 2017-11-24
  */
@@ -65,11 +67,87 @@ public class DummyController extends BaseController {
 
     //By default, read property from application.yml or application.properties
     //If read from app.yaml/app.properties, add @PropertySource("classpath:/com/acme/app.properties")
-    @Value("${appConf.version}")
+    @Value("${appconf.version}")
     private Long version;
 
     @Autowired
-    private DummyService dummyService;
+    private DummyServiceImpl dummyService;
+    
+    static String APP_ID = "app001";
+    static String APP_SECRET = "secret001";
+    static String URL_WX_SESSION = "https://api.weixin.qq.com/sns/jscode2session?appid=" + APP_ID + "&secret=" + APP_SECRET + "&grant_type=authorization_code";
+       
+    //param: {code, userName,tel,inviteCode}
+    //After register, return a jsession,roleCode
+    //Or inviteCode is invalid or has been used.
+    @PostMapping("/register")
+    public ResponseVO register(@RequestBody UserInfoBean u) {
+        log.info("Register: " + u);
+        // TODO Check userName, tel, code
+        String code = u.getCode();
+        String userName = u.getUserName();
+        String tel = u.getTel(); //130-1234-5678
+        String inviteCode = u.getInviteCode();
+        //Check inviteCode is valid
+        
+        //1) To get openId by wx(code, appId,appSecret)
+        String url = URL_WX_SESSION + "&js_code=" + code;
+        String res = HttpUtil.sendGet(url, null);
+        log.info("" + res);
+        JSONObject obj = JSONObject.parseObject(res);
+        String openId = obj.getString("openid"); // session_key
+        log.info("code {} openId {}", code, openId);
+        //TODO exception handler. if openId = null
+        
+        String sessionCode = getSessionCode();
+        
+        //2) DB: Add (openId, userName, tel)
+        //3) DB: Update the code has been used
+        //4) Generate SessionCode, save to Map<sessionCode, openId>
+        
+        //5) Return sessioncode,roleCode,roleName        
+        ResponseVO result = new ResponseVO();
+        Map<String, String> map = new HashMap<>();
+        map.put("originalCode: ", code);
+        map.put("sessionCode", sessionCode);
+        map.put("roleCode", "002");
+        map.put("roleName", "AreaAdmin");
+        result.setData(map);
+        return result;
+    }
+    
+    String getSessionCode() {
+        String token = UUID.randomUUID().toString();
+        return token.replace("-", ""); //32-bits
+    }
+        
+    /**
+     * @return {sessioncode,roleCode,roleName}
+     */
+    @GetMapping("/login")
+    public ResponseVO login(@RequestParam String code) {
+        //1) Get openId by (code, appId,appSecret)
+        String url = URL_WX_SESSION + "&js_code=" + code;
+        String res = HttpUtil.sendGet(url, null);
+        log.info(res);
+        JSONObject obj = JSONObject.parseObject(res);
+        String openId = obj.getString("openid"); // session_key
+        log.info("code {} openId {}", code, openId);
+        
+        //2) If user exists, generate jsessioncode, return (jsession,roleCode,roleName)
+        //TODO found user in DB. "select * from t_user where openId = ?"
+        String sessionCode = getSessionCode();
+        
+        //TODO if not found, new ResponseVO("501", "User doesnot exist, Please get inviteCode to join")
+        ResponseVO result = new ResponseVO();
+        Map<String, String> map = new HashMap<>();
+        map.put("sessionCode", sessionCode);
+        map.put("roleCode", "002");
+        map.put("roleName", "AreaAdmin");
+        result.setData(map);
+        
+        return result;
+    }
 
     //Use org.springframework.http.converter.json.Jackson2ObjectMapperBuilder to convert JSON to Object
     //@RequestMapping(path = "/add", method = RequestMethod.POST)
@@ -108,10 +186,9 @@ public class DummyController extends BaseController {
      */
     //@RequestMapping(path = "/list", method = RequestMethod.GET, produces = RESPONSE_TYPE)
     @GetMapping("/list")
-    public ResponseVO findDummyList(DummyVO param) {
+    public ResponseVO list() {
         return process(() -> {
-            log.info("Param: {}", param);
-            return dummyService.findDummyList(1);
+            return dummyService.users();
         });
     }
 
@@ -206,14 +283,14 @@ public class DummyController extends BaseController {
         return new ResponseVO(statusCode, statusMsg, obj);
     }
 
-    /**
-     * Process Fortify warning
-     * 
-     * @param binder
-     * @param request
-     */
-    @InitBinder
-    public void initBinder(WebDataBinder binder, WebRequest request) {
-        binder.setDisallowedFields("createTime");
+
+    
+    @GetMapping("/projects")
+    public ResponseVO projects(String projectName, PageVO pageVO) {
+        log.info("Project: {} PageVO {}", projectName, pageVO);
+        
+        Map<String, String> map = new HashMap<String,String>();
+        map.put("project_name", projectName);
+        return process(() -> dummyService.findProjectPage(map, pageVO));
     }
 }

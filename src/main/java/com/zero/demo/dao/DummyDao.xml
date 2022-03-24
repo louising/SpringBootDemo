@@ -3,18 +3,66 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.zero.demo.dao.DummyDao">
-    <sql id="findDummySQL">
-        select 
-            USER_ID   userId, 
-            USER_NAME userName
-        from T_USER
-        where USER_ID <![CDATA[>=]]> #{0}
-    </sql>
-    
-    <select id="findDummyList" resultType="com.zero.demo.vo.DummyVO">
-        <include refid="findDummySQL"/>
+    <!-- User -->
+    <select id="users" resultType="map">
+        select * from T_USER where user_name <![CDATA[<>]]> ''
     </select>
 
+    <sql id="sqlUsers">
+        select * from T_USER where user_name <![CDATA[<>]]> ''
+    </sql>
+    <select id="usersPage" resultType="map">
+        <include refid="sqlUsers"/>
+        limit #{startIndex}, #{pageSize}
+    </select>
+    <select id="usersPageCount" resultType="int">
+        select count(1) recordCount from (<include refid="sqlUsers"/>) a
+    </select>
+    
+    <!-- Projects -->
+    <sql id="sqlFindProjectPage">
+        select p.*
+        from t_project p
+        where 1=1 
+        <if test="project_name!=null and project_name!=''">
+            and project_name like '%${project_name}%'
+        </if>
+        order by p.create_time desc       
+    </sql>
+    <select id="findProjectPage" parameterType="map" resultType="map">
+        <include refid="sqlFindProjectPage"/>
+        limit #{startIndex}, #{pageSize}
+    </select>
+    <select id="findProjectPageCount" parameterType="map" resultType="int" >
+        select count(1) recordCount from (<include refid="sqlFindProjectPage"/>) a
+    </select>
+    
+    <insert id="addProject" parameterType="map">
+        insert into t_project (project_id,project_name,project_admin_id,project_area_admin_id,project_desc)
+        values (
+            #{project_id,            jdbcType=VARCHAR}, 
+            #{project_name,          jdbcType=VARCHAR},
+            #{project_admin_id,      jdbcType=VARCHAR},
+            #{project_area_admin_id, jdbcType=VARCHAR},
+            #{project_desc,          jdbcType=VARCHAR}
+        )
+    </insert>
+    <update id="updProject" parameterType="map">
+        update t_project set 
+          project_name = #{project_name}, 
+          project_admin_id = #{project_admin_id},
+          project_area_admin_id = #{project_area_admin_id},
+          project_desc = #{project_desc}
+        where project_id = #{project_id}
+    </update>
+    <select id="getProject" resultType="map">
+        select * from t_project where project_id=#{arg0}
+    </select>
+    <update id="delProject">
+        delete from t_project
+        where project_id = #{project_id}
+    </update>            
+        
     <!-- Add Scheme -->
     <insert id="addDummy" parameterType="com.zero.demo.vo.DummyVO" useGeneratedKeys="true" keyProperty="userId" keyColumn="user_id" >
         insert into T_USER(

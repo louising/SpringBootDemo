@@ -5,6 +5,7 @@ import static com.zero.demo.constants.I18NConstants.ERR_FAIL;
 import static com.zero.demo.constants.I18NConstants.ERR_UPLOAD;
 import static com.zero.demo.util.BaseUtil.getTmpDir;
 import static com.zero.demo.util.BaseUtil.writeFile;
+import static com.zero.demo.util.BaseUtil.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,10 +31,8 @@ import com.zero.demo.ServiceException;
 import com.zero.demo.conf.AppConf;
 import com.zero.demo.conf.ConfigValueConf;
 import com.zero.demo.dao.DummyDao;
-import com.zero.demo.service.DummyService;
 import com.zero.demo.util.BaseUtil;
 import com.zero.demo.util.FileUtil;
-import com.zero.demo.util.HttpUtil;
 import com.zero.demo.util.IoUtil;
 import com.zero.demo.util.ZipUtils;
 import com.zero.demo.vo.DummyVO;
@@ -45,7 +44,7 @@ import com.zero.demo.vo.DummyVO;
  * @version 2018-07-01
  */
 @Component
-public class DummyServiceImpl extends BaseServiceImpl implements DummyService {
+public class DummyServiceImpl extends BaseServiceImpl {
     Logger log = LoggerFactory.getLogger(DummyServiceImpl.class);
 
     final static String LOG_DIR = "/SpringBootDemo/logs/"; //refer to logback.xml
@@ -60,7 +59,7 @@ public class DummyServiceImpl extends BaseServiceImpl implements DummyService {
     private AppConf appConf;
     
     @Autowired
-    private DummyDao dummyDao;
+    private DummyDao dao;
     
     static {
         supportedDocTypes.add("zip");
@@ -72,28 +71,61 @@ public class DummyServiceImpl extends BaseServiceImpl implements DummyService {
         map.put("configPath", configVO.getConfigPath());
         return map;
     }
-
-    public List<DummyVO> findDummyList(int userId) throws ServiceException {
-        Object userBean = HttpUtil.getRequest().getAttribute("userBean");
-        System.out.println("UserBean: " + userBean);
-        log.info("userId: " + userId + " config path: " + configVO.getConfigPath());
-
-        if (userId < 1) {
-            throw new ServiceException("USER_ID_INVALID");
+    
+    /* User */
+    public List<Map> users() throws ServiceException {
+        return dao.users();
+    }
+    public PageResultVO usersPage(PageVO pageVO) throws ServiceException {
+        return doPagedQuery(dao, "usersPage", null, pageVO);
+    }
+    
+    /* Project */
+    public PageResultVO findProjectPage(Map<String, String> param, PageVO pageVO) throws ServiceException {
+        PageResultVO vo = doPagedQuery(dao, "findProjectPage", param, pageVO);
+        formateDateTime((List) vo.getRecords(), "create_time");
+        return vo;
+    }
+    
+    public void delProject(String projectId) {
+        dao.delProject(projectId);
+    }
+    
+    public void saveProject(Map<String, String> map) {
+        //1
+        String projectId = map.get("project_id");
+        if (isEmpty(projectId)) {
+            projectId = BaseUtil.getPkCode();
+            map.put("project_id", projectId);
+            dao.addProject(map);
+        } else {
+            dao.updProject(map);
         }
-
-        return dummyDao.findDummyList(userId);
+    }
+    
+    public Map<String, Object> getProject(String projectId) {
+        return dao.getProject(projectId);
+    }
+    
+    private void formateDateTime(List<Map<String, Object>> list, String... fieldNames) {
+        for (Map map : list) {
+            for (String fieldName : fieldNames) {
+                map.put(fieldName, BaseUtil.formatDateTime((java.sql.Timestamp) map.get(fieldName)));
+            }
+        }
     }
 
+    
+    
     public PageResultVO findDummyPage(DummyVO param, PageVO pageVO) throws ServiceException {
         log.info("Param: {}, PageVO: {}", param, pageVO);
-        return doPagedQuery(dummyDao, "findDummyPage", param, pageVO);
+        return doPagedQuery(dao, "findDummyPage", param, pageVO);
     }
     
     @Transactional //rollbackFor = ServiceException.class
     public Integer addDummy(DummyVO dummyVO) throws ServiceException {
         log.info("add dummy: " + dummyVO);
-        dummyDao.addDummy(dummyVO);
+        dao.addDummy(dummyVO);
         
         if (dummyVO.getUserName().equals("ERROR"))
             throw new ServiceException("ERR_USER_NAME");
@@ -128,13 +160,12 @@ public class DummyServiceImpl extends BaseServiceImpl implements DummyService {
         }
     }
 
-    @Override
     public void addAccessRecord(AccessVO vo) throws ServiceException {
         //dummyDao.addAccessRecord(vo);
     }
 
     public PageResultVO findAccessPage(PageVO pageVO) throws ServiceException {
-        return doPagedQuery(dummyDao, "findAccessPage", null, pageVO);
+        return doPagedQuery(dao, "findAccessPage", null, pageVO);
     }
 
     public String uploadFile(MultipartFile multiFile) throws ServiceException {

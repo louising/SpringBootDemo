@@ -3,9 +3,9 @@ package com.zero.springboot.demo;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.context.embedded.LocalServerPort;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
+
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.RestTemplate;
 
-import com.zero.demo.DemoApplication;
+import com.zero.demo.SpringBootDemoApplication;
 
 /**
  * RestTemplate lies in spring-web.jar
@@ -26,11 +26,9 @@ import com.zero.demo.DemoApplication;
  * @author Louisling
  * @version 2018-07-10
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = DemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = SpringBootDemoApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class DummyControllerTest {
     //@Value("${local.server.port}")
-    @LocalServerPort
     private int port;
 
     @Test
