@@ -2,6 +2,12 @@ package com.zero.core.domain;
 
 import static com.zero.demo.constants.BaseConstants.*;
 
+/**
+ * ResponseVO
+ * 
+ * @author Louisling
+ * @since 2018-07-01
+ */
 public class ResponseVO {
     private String statusCode = STATUS_OK;
     private String statusMsg;

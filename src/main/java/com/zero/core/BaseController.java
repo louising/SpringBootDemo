@@ -1,11 +1,12 @@
-package com.zero.demo.controller;
+package com.zero.core;
 
 import static com.zero.demo.constants.BaseConstants.HEADER_TOKEN;
 import static com.zero.demo.constants.BaseConstants.STATUS_ERR;
 import static com.zero.demo.constants.BaseConstants.STATUS_NOT_LOGIN;
 import static com.zero.demo.constants.I18NConstants.ERR_NO_TOKEN;
+import static com.zero.demo.util.BaseUtil.checkNotNull;
+import static com.zero.demo.util.BaseUtil.checkParameterTrue;
 import static com.zero.demo.util.I18nUtil.getMessage;
-import static com.zero.demo.util.BaseUtil.*;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,25 +17,27 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import com.zero.core.domain.AccessVO;
 import com.zero.core.domain.ResponseVO;
 import com.zero.core.tasks.AppCallable;
 import com.zero.core.tasks.AppRunnable;
 import com.zero.core.tasks.AppTask;
-import com.zero.demo.ServiceException;
 import com.zero.demo.constants.BaseConstants;
-import com.zero.demo.service.DummyService;
 import com.zero.demo.util.HttpUtil;
 import com.zero.demo.vo.UserInfoBean;
 
+/**
+ * Base Controller
+ * 
+ * @author Louisling
+ * @since 2018-07-01
+ */
 public abstract class BaseController {
-    static final Logger log = LoggerFactory.getLogger(BaseController.class);
+    protected static final Logger log = LoggerFactory.getLogger(BaseController.class);
+    protected static final Map<String, String> userTokenMap = new ConcurrentHashMap<>(); //Map(userID, Token)
 
-    static final Map<String, String> userTokenMap = new ConcurrentHashMap<>(); //Map(userID, Token)
-
-    private ExecutorService executorService = Executors.newFixedThreadPool(2);
+    private ExecutorService executorService = Executors.newCachedThreadPool();
 
     protected void checkUserLogin() throws ServiceException {
         if (BaseConstants.LOGIN_ENABLE) {

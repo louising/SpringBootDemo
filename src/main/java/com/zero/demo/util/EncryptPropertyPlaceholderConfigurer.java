@@ -11,7 +11,7 @@ import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
     </property>
 </bean>
 
- * @author Administrator
+ * @author Louis
  * @version 2018-5-30
  */
 public class EncryptPropertyPlaceholderConfigurer extends PropertyPlaceholderConfigurer {

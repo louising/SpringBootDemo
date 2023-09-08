@@ -21,7 +21,7 @@ It demonstrates these features
 5) XRSF defense(the simplest way:)
 6) CORS(Cross-origin resource sharing)
 7) jUnit test
-8) Swagger //http://localhost:8080/SpringBootDemo/swagger-ui.html
+8) Swagger //http://localhost:8080/SpringBootDemo/swagger-ui/index.html  http://localhost:8080/SpringBootDemo/swagger-ui.html (OLD)
 9) Slf4j + Logback
 A) Schedule
 B) Encryption/Decryption

@@ -1,5 +1,11 @@
 package com.zero.core.domain;
 
+/**
+ * PageVO(pageIndex, pageSize, recordCount)
+ * 
+ * @author Louisling
+ * @since 2018-07-01
+ */
 public class PageVO {
     private static int DEFAULT_PAGE_SIZE = 10;
 

@@ -1,5 +1,11 @@
 package com.zero.demo.constants;
 
+/**
+ * EnumConstants
+ * 
+ * @author Louisling
+ * @since 2018-07-01
+ */
 public interface EnumConstants {
     int SUPPORT_LEVEL           = 1000;
     int SUPPORT_LEVEL_CRITICAL  = 1;    //Critical

@@ -8,7 +8,6 @@ import static com.zero.demo.constants.I18NConstants.MSG_SUCCESS;
 import static com.zero.demo.util.I18nUtil.getMessage;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -30,9 +29,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
+import com.zero.core.BaseController;
+import com.zero.core.ServiceException;
 import com.zero.core.domain.PageVO;
 import com.zero.core.domain.ResponseVO;
-import com.zero.demo.ServiceException;
 import com.zero.demo.service.impl.DummyServiceImpl;
 import com.zero.demo.util.HttpUtil;
 import com.zero.demo.vo.DummyVO;
@@ -57,7 +57,7 @@ import io.swagger.annotations.ApiOperation;
  *    GET http://localhost:8080/SpringBootDemo/dummy/sysInfo
  *    GET http://localhost:8080/SpringBootDemo/dummy/list2?sessionCode=123
  *    
- * @author Administrator
+ * @author Louis
  * @version 2017-11-24
  */
 @RestController

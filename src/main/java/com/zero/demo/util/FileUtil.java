@@ -11,8 +11,14 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.zero.demo.ServiceException;
+import com.zero.core.ServiceException;
 
+/**
+ * FileUtil
+ * 
+ * @author Louisling
+ * @since 2018-07-01
+ */
 public class FileUtil {
     private static Logger log = LoggerFactory.getLogger(FileUtil.class);
 

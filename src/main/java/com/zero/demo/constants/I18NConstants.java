@@ -1,5 +1,11 @@
 package com.zero.demo.constants;
 
+/**
+ * I18NConstants
+ * 
+ * @author Louisling
+ * @since 2018-07-01
+ */
 public interface I18NConstants {
     String LANGUAGE_EN = "en-US";
     String LANGUAGE_ZH = "zh-CN";

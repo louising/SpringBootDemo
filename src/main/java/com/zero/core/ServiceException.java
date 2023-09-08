@@ -1,4 +1,4 @@
-package com.zero.demo;
+package com.zero.core;
 
 /**
  * Exception that throw when a error occurs in service layer

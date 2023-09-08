@@ -1,5 +1,11 @@
 package com.zero.demo.vo;
 
+/**
+ * DummyVO
+ * 
+ * @author Louisling
+ * @since 2018-07-01
+ */
 public class DummyVO {
     private Integer userId;
     private String userName;

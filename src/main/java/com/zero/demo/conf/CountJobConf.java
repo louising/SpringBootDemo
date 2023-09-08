@@ -3,6 +3,12 @@ package com.zero.demo.conf;
 //import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+/**
+ * CountJobConf
+ * 
+ * @author Louisling
+ * @since 2018-07-01
+ */
 @Component
 public class CountJobConf {
     /**

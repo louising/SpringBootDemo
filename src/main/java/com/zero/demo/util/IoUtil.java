@@ -15,6 +15,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+/**
+ * IO Utils
+ * 
+ * @author Louisling
+ * @since 2018-07-01
+ */
 public class IoUtil {
     static Logger log = LoggerFactory.getLogger(IoUtil.class);
 

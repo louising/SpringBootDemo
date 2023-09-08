@@ -7,7 +7,7 @@ import java.nio.file.Files;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import com.zero.demo.ServiceException;
+import com.zero.core.ServiceException;
 
 import static com.zero.demo.constants.BaseConstants.*;
 import static java.nio.file.StandardOpenOption.*;

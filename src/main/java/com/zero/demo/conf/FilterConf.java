@@ -8,8 +8,14 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import com.zero.core.filter.LoginFilter;
+import com.zero.demo.filter.LoginFilter;
 
+/**
+ * FilterConf
+ * 
+ * @author Louisling
+ * @since 2018-07-01
+ */
 @Configuration
 public class FilterConf {
 

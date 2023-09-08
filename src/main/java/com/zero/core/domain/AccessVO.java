@@ -1,6 +1,12 @@
 package com.zero.core.domain;
 import java.util.Date;
 
+/**
+ * AccessVO that record access history
+ * 
+ * @author Louisling
+ * @since 2018-07-01
+ */
 public class AccessVO {
     private Long accessId;
 

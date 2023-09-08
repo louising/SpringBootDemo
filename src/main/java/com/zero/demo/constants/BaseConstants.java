@@ -1,5 +1,11 @@
 package com.zero.demo.constants;
 
+/**
+ * BaseConstants
+ * 
+ * @author Louisling
+ * @since 2018-07-01
+ */
 public interface BaseConstants {
     boolean LOGIN_ENABLE = false;
     boolean XSRF_ENABLE = false;

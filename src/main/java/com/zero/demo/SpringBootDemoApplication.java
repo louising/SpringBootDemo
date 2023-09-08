@@ -7,6 +7,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import springfox.documentation.oas.annotations.EnableOpenApi;
 
+/**
+ * SpringBootDemoApplication
+ * 
+ * @author Louisling
+ * @since 2018-07-01
+ */
 @EnableOpenApi
 @SpringBootApplication
 public class SpringBootDemoApplication {

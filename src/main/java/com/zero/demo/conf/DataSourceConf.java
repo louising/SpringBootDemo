@@ -10,6 +10,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
+/**
+ * DataSourceConf
+ * 
+ * @author Louisling
+ * @since 2018-07-01
+ */
 @Configuration
 @MapperScan("com.zero.demo.dao")
 public class DataSourceConf {

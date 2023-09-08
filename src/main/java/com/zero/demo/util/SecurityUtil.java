@@ -15,6 +15,12 @@ import org.slf4j.LoggerFactory;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
+/**
+ * SecurityUtil
+ * 
+ * @author Louisling
+ * @since 2018-07-01
+ */
 @SuppressWarnings("restriction")
 public class SecurityUtil {
     private static Logger log = LoggerFactory.getLogger(SecurityUtil.class);

@@ -1,5 +1,11 @@
 package com.zero.demo.vo;
 
+/**
+ * UserInfoBean
+ * 
+ * @author Louisling
+ * @since 2018-07-01
+ */
 public class UserInfoBean {
     private String code; //wx.login()
     private String userName;

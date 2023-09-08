@@ -1,4 +1,4 @@
-package com.zero.demo.service.impl;
+package com.zero.core;
 
 import static com.zero.demo.constants.I18NConstants.ERR_FAIL;
 
@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import com.zero.core.domain.BaseVO;
 import com.zero.core.domain.PageResultVO;
 import com.zero.core.domain.PageVO;
-import com.zero.demo.ServiceException;
 
 /**
  * BaseServiceImpl
@@ -90,5 +89,4 @@ public abstract class BaseServiceImpl {
 
         return pagedResult;
     }
-
 }

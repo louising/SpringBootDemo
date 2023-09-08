@@ -27,8 +27,14 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.zero.demo.ServiceException;
+import com.zero.core.ServiceException;
 
+/**
+ * HttpUtil
+ * 
+ * @author Louisling
+ * @since 2018-07-01
+ */
 public class HttpUtil {
     static Logger log = LoggerFactory.getLogger(HttpUtil.class);
 

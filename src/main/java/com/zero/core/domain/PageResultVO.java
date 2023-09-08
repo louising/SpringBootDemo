@@ -1,5 +1,11 @@
 package com.zero.core.domain;
 
+/**
+ * PageResultVO
+ * 
+ * @author Louisling
+ * @since 2018-07-01
+ */
 public class PageResultVO {
     private Object records;
     private PageVO pageVO;

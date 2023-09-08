@@ -8,6 +8,12 @@ import org.apache.ibatis.annotations.Param;
 
 import com.zero.demo.vo.DummyVO;
 
+/**
+ * DummyDao
+ * 
+ * @author Louisling
+ * @since 2018-07-01
+ */
 @SuppressWarnings("rawtypes")
 public interface DummyDao {
     List<Map> users();

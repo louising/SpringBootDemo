@@ -26,8 +26,14 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.zero.demo.ServiceException;
+import com.zero.core.ServiceException;
 
+/**
+ * BaseUtil
+ * 
+ * @author Louisling
+ * @since 2018-07-01
+ */
 public class BaseUtil {
     private static Logger log = LoggerFactory.getLogger(BaseUtil.class);
     static NumberFormat numberFormat = NumberFormat.getNumberInstance();

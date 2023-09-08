@@ -4,6 +4,12 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+/**
+ * BaseVO
+ * 
+ * @author Louisling
+ * @since 2018-07-01
+ */
 public class BaseVO {
     private String createBy;
     private String updateBy;

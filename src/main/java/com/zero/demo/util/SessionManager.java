@@ -3,6 +3,12 @@ package com.zero.demo.util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+/**
+ * SessionManager
+ * 
+ * @author Louisling
+ * @since 2018-07-01
+ */
 public class SessionManager {
     static Log log = LogFactory.getLog(SessionManager.class);
     static String SESSION_USER_INFO_KEY = "SESSION_USER_INFO_KEY";
